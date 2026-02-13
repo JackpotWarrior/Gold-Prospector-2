@@ -3,110 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Prospector Application</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <title>Jackpot Warrior Prospector Tool</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+        .header { background-color: #4CAF50; color: white; padding: 15px; text-align: center; }
+        .content { padding: 20px; }
+        .mobile-first { display: flex; flex-direction: column; }
+        @media (min-width: 600px) {
+            .mobile-first { flex-direction: row; }
+        }
+    </style>
 </head>
 <body>
-    <h1>Gold Prospector Application</h1>
-    <div id="selectors">
-        <label for="stateSelector">State:</label>
-        <select id="stateSelector" onchange="loadCounties()"></select>
-        <label for="countySelector">County:</label>
-        <select id="countySelector"></select>
+    <div class="header">
+        <h1>Jackpot Warrior Prospector Tool</h1>
     </div>
-    <div id="results"></div>
-    <div id="map" style="height: 600px;"></div>
+    <div class="content mobile-first">
+        <div class="selection">
+            <h2>Select State/County</h2>
+            <select id="state">
+                <option value="NV">Nevada</option>
+                <option value="CA">California</option>
+                <!-- Add more states as necessary -->
+            </select>
+            <select id="county">
+                <option value="">Select County</option>
+                <!-- Populate based on selected state -->
+            </select>
+        </div>
+        <div class="search">
+            <h2>Search BLM Closed Claims</h2>
+            <button onclick="searchBLMClaims()">Search</button>
+        </div>
+    </div>
+    <div>
+        <h2>Active Claim Conflict Detection</h2>
+        <p id="conflict-report">No conflicts detected.</p>
+    </div>
+    <div>
+        <h2>MRDS Geology Integration</h2>
+        <p id="geology-info">Geology data will appear here.</p>
+    </div>
+    <div>
+        <h2>Scoring System</h2>
+        <p id="score">Score: 0</p>
+    </div>
+    <div>
+        <h2>Geology Panel</h2>
+        <p id="hunting-tactics">Hunting tactics will be discussed here.</p>
+    </div>
     <script>
-        const fetchJSON = async(url) => {
-            const response = await fetch(url);
-            if (!response.ok) throw new Error('Network response was not ok');
-            return response.json();
-        };
-
-        const loadCounties = async() => {
-            const state = document.getElementById('stateSelector').value;
-            const fallbackList = ['County1', 'County2']; // Add fallback list if needed
-
-            try {
-                const counties = await fetchJSON(`api/counties/${state}`);
-                populateCountyDropdown(counties);
-            } catch (error) {
-                console.error(error);
-                populateCountyDropdown(fallbackList);
-            }
-        };
-
-        const populateCountyDropdown = (counties) => {
-            const countySelector = document.getElementById('countySelector');
-            countySelector.innerHTML = '';
-            counties.forEach(county => {
-                const option = document.createElement('option');
-                option.value = county;
-                option.textContent = county;
-                countySelector.appendChild(option);
-            });
-        };
-
-        const buildWhere = (parameters) => {
-            // Implement query builder logic
-            return Object.entries(parameters).map(([key, value]) => `${key}='${value}'`).join(' AND ');
-        };
-
-        const fetchClosed = async(page = 1) => {
-            const response = await fetchJSON(`api/closed?page=${page}`);
-            return response;
-        };
-
-        const fetchActive = async(bounds) => {
-            const response = await fetchJSON(`api/active?bounds=${JSON.stringify(bounds)}`);
-            return response;
-        };
-
-        const fetchMRDS = async() => {
-            const response = await fetchJSON(`api/mrds`);
-            return response;
-        };
-
-        const pointInPolygon = (point, polygon) => {
-            // Implement point-in-polygon detection
-        };
-
-        const haversineDistance = (coords1, coords2) => {
-            const toRad = (value) => value * Math.PI / 180;
-            const R = 6371e3; // metres
-            const phi1 = toRad(coords1.lat);
-            const phi2 = toRad(coords2.lat);
-            const deltaPhi = toRad(coords2.lat - coords1.lat);
-            const deltaLambda = toRad(coords2.lng - coords1.lng);
-
-            const a = Math.sin(deltaPhi / 2) * Math.sin(deltaPhi / 2) + 
-                      Math.cos(phi1) * Math.cos(phi2) * 
-                      Math.sin(deltaLambda / 2) * Math.sin(deltaLambda / 2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            return R * c; // in metres
-        };
-
-        const calculateScore = (deposit, proximity) => {
-            // Implement score calculation logic
-        };
-
-        const renderResultsTable = (data) => {
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = '<table><thead><tr><th>Action</th><th>Data</th></tr></thead><tbody>';
-            data.forEach(item => {
-                resultsDiv.innerHTML += `<tr><td><a href='${item.link}' target='_blank'>Open BLM MLRS</a></td><td>${item.data}</td></tr>`;
-            });
-            resultsDiv.innerHTML += '</tbody></table>';
-        };
-
-        // Initialize the map
-        const map = L.map('map').setView([37.8, -96], 4);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
+        function searchBLMClaims() {
+            // Function to search BLM Closed Claims
+            alert('Searching BLM Claims...');
+        }
     </script>
 </body>
 </html>
