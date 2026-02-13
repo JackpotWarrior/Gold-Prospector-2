@@ -1,18 +1,34 @@
-function buildWhere() {
-    // Your existing logic here
-    // Removed the stray return statement
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gold Prospector 2</title>
+</head>
+<body>
+    <h1>Welcome to Gold Prospector 2</h1>
+    <script>
+        function buildWhere() {
+            // corrected function without return where;
+            // logic to build where
+        }
 
-function runSearch(a, meta) {
-    return {
-        serial: a.CSE_NR,  // corrected field name
-        state: a.ADMIN_STATE,  // corrected field name
-        county: extractMeta(meta, 'county'),  // extract county from meta
-        closedDate: extractMeta(meta, 'closedDate')  // extract closedDate from meta
-    };
-}
+        function loadCounties() {
+            // logic to load counties
+        }
+        // Removed extra closing brace here
 
-// Removed extra closing brace after loadCounties function
-// function loadCounties() {
-//     // your existing logic here
-// }
+        function extractMeta(meta) {
+            const county = meta.county;
+            const closedDate = meta.closedDate;
+            return { county, closedDate };
+        }
+
+        // Example of claims mapping
+        const claims = [
+            { CSE_NR: '123', ADMIN_STATE: 'NV' },
+            // other claims
+        ];
+    </script>
+</body>
+</html>
