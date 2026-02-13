@@ -4,37 +4,76 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gold Prospector</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 </head>
 <body>
-    <h1>Welcome to Gold Prospector</h1>
+    <header>
+        <h1>Gold Prospector App</h1>
+    </header>
+    <main>
+        <div id="map" style="height: 500px;"></div>
+        <div id="geology-panel">
+            <h2>Geology Information</h2>
+            <table id="geology-table">
+                <thead>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </main>
     <script>
-        function buildWhere() {
-            // Removed stray return statement
-            // Other logic for building where clause...
-        }
+        // Map Initialization
+        var map = L.map('map').setView([37.7749, -122.4194], 10); // Default location (San Francisco)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
 
-        function extractMeta(data) {
-            const county = data.county;
-            const closedDate = data.closedDate;
-            return { county, closedDate };
-        }
-
-        function loadCounties() {
-            // Load counties logic
-            // Removed extra closing brace
-        }
-
-        // API call logic with corrected field names
-        fetch('api_endpoint')
-            .then(response => response.json())
-            .then(data => {
-                const correctedData = {
-                    CSE_NR: data.CSE_NR,
-                    ADMIN_STATE: data.ADMIN_STATE,
-                    ...extractMeta(data.metadata)
-                };
-                // Additional processing...
+        // BLM/MRDS API integration
+        function fetchGeologyData() {
+            $.get('https://api.example.com/geology/data', function(data) {
+                processGeologyData(data);
             });
+        }
+
+        function processGeologyData(data) {
+            var geologyData = extractMetadata(data);
+            renderTable(geologyData);
+        }
+
+        function extractMetadata(data) {
+            // Simplified metadata extraction logic
+            return data.metadata;
+        }
+
+        function renderTable(geologyData) {
+            var tbody = $('#geology-table tbody');
+            tbody.empty();
+            geologyData.forEach(item => {
+                tbody.append(`<tr><td>${item.attribute}</td><td>${item.value}</td></tr>`);
+            });
+        }
+
+        // Conflict detection logic
+        function detectConflicts(geologyData) {
+            // Implement conflict detection based on geology scoring
+        }
+
+        // Geology scoring function
+        function calculateGeologyScore(geologyData) {
+            // Implement scoring logic based on geological attributes
+        }
+
+        // Initialize application
+        fetchGeologyData();
     </script>
 </body>
 </html>
