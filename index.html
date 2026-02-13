@@ -4,59 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jackpot Warrior Prospector Tool</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
-        .header { background-color: #4CAF50; color: white; padding: 15px; text-align: center; }
-        .content { padding: 20px; }
-        .mobile-first { display: flex; flex-direction: column; }
-        @media (min-width: 600px) {
-            .mobile-first { flex-direction: row; }
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="header">
         <h1>Jackpot Warrior Prospector Tool</h1>
     </div>
-    <div class="content mobile-first">
-        <div class="selection">
-            <h2>Select State/County</h2>
-            <select id="state">
-                <option value="NV">Nevada</option>
-                <option value="CA">California</option>
-                <!-- Add more states as necessary -->
-            </select>
-            <select id="county">
-                <option value="">Select County</option>
-                <!-- Populate based on selected state -->
-            </select>
-        </div>
-        <div class="search">
-            <h2>Search BLM Closed Claims</h2>
-            <button onclick="searchBLMClaims()">Search</button>
-        </div>
+    <div class="filters">
+        <label for="state">Select State:</label>
+        <select id="state">
+            <option value="CA">California</option>
+            <option value="NV">Nevada</option>
+            <!-- Add other states -->
+        </select>
+        <label for="county">Select County:</label>
+        <select id="county">
+            <option value="LA">Los Angeles</option>
+            <option value="CL">Clark</option>
+            <!-- Add other counties based on selected state -->
+        </select>
+        <label for="timeWindow">Time Window:</label>
+        <input type="date" id="timeWindow">
+        <button id="filterButton">Filter</button>
     </div>
-    <div>
-        <h2>Active Claim Conflict Detection</h2>
-        <p id="conflict-report">No conflicts detected.</p>
+    <div id="mapContainer">
+        <!-- Map visualization area -->
     </div>
-    <div>
-        <h2>MRDS Geology Integration</h2>
-        <p id="geology-info">Geology data will appear here.</p>
+    <div class="results">
+        <table id="resultsTable">
+            <thead>
+                <tr>
+                    <th>Claim Serial</th>
+                    <th>Status</th>
+                    <th>Geology Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Populate with results -->
+            </tbody>
+        </table>
     </div>
-    <div>
-        <h2>Scoring System</h2>
-        <p id="score">Score: 0</p>
-    </div>
-    <div>
-        <h2>Geology Panel</h2>
-        <p id="hunting-tactics">Hunting tactics will be discussed here.</p>
-    </div>
+    <script src="app.js"></script>
     <script>
-        function searchBLMClaims() {
-            // Function to search BLM Closed Claims
-            alert('Searching BLM Claims...');
-        }
+        // JavaScript for handling BLM/MRDS integration
+        // including conflict detection, geology scoring, etc.
     </script>
 </body>
 </html>
