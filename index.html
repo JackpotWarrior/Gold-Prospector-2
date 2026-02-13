@@ -1,0 +1,18 @@
+function buildWhere() {
+    // Your existing logic here
+    // Removed the stray return statement
+}
+
+function runSearch(a, meta) {
+    return {
+        serial: a.CSE_NR,  // corrected field name
+        state: a.ADMIN_STATE,  // corrected field name
+        county: extractMeta(meta, 'county'),  // extract county from meta
+        closedDate: extractMeta(meta, 'closedDate')  // extract closedDate from meta
+    };
+}
+
+// Removed extra closing brace after loadCounties function
+// function loadCounties() {
+//     // your existing logic here
+// }
