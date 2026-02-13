@@ -3,77 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Prospector</title>
+    <title>Gold Prospector Application</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 </head>
 <body>
-    <header>
-        <h1>Gold Prospector App</h1>
-    </header>
-    <main>
-        <div id="map" style="height: 500px;"></div>
-        <div id="geology-panel">
-            <h2>Geology Information</h2>
-            <table id="geology-table">
-                <thead>
-                    <tr>
-                        <th>Attribute</th>
-                        <th>Value</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
-    </main>
+    <h1>Gold Prospector Application</h1>
+    <div id="selectors">
+        <label for="stateSelector">State:</label>
+        <select id="stateSelector" onchange="loadCounties()"></select>
+        <label for="countySelector">County:</label>
+        <select id="countySelector"></select>
+    </div>
+    <div id="results"></div>
+    <div id="map" style="height: 600px;"></div>
     <script>
-        // Map Initialization
-        var map = L.map('map').setView([37.7749, -122.4194], 10); // Default location (San Francisco)
+        const fetchJSON = async(url) => {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.json();
+        };
+
+        const loadCounties = async() => {
+            const state = document.getElementById('stateSelector').value;
+            const fallbackList = ['County1', 'County2']; // Add fallback list if needed
+
+            try {
+                const counties = await fetchJSON(`api/counties/${state}`);
+                populateCountyDropdown(counties);
+            } catch (error) {
+                console.error(error);
+                populateCountyDropdown(fallbackList);
+            }
+        };
+
+        const populateCountyDropdown = (counties) => {
+            const countySelector = document.getElementById('countySelector');
+            countySelector.innerHTML = '';
+            counties.forEach(county => {
+                const option = document.createElement('option');
+                option.value = county;
+                option.textContent = county;
+                countySelector.appendChild(option);
+            });
+        };
+
+        const buildWhere = (parameters) => {
+            // Implement query builder logic
+            return Object.entries(parameters).map(([key, value]) => `${key}='${value}'`).join(' AND ');
+        };
+
+        const fetchClosed = async(page = 1) => {
+            const response = await fetchJSON(`api/closed?page=${page}`);
+            return response;
+        };
+
+        const fetchActive = async(bounds) => {
+            const response = await fetchJSON(`api/active?bounds=${JSON.stringify(bounds)}`);
+            return response;
+        };
+
+        const fetchMRDS = async() => {
+            const response = await fetchJSON(`api/mrds`);
+            return response;
+        };
+
+        const pointInPolygon = (point, polygon) => {
+            // Implement point-in-polygon detection
+        };
+
+        const haversineDistance = (coords1, coords2) => {
+            const toRad = (value) => value * Math.PI / 180;
+            const R = 6371e3; // metres
+            const phi1 = toRad(coords1.lat);
+            const phi2 = toRad(coords2.lat);
+            const deltaPhi = toRad(coords2.lat - coords1.lat);
+            const deltaLambda = toRad(coords2.lng - coords1.lng);
+
+            const a = Math.sin(deltaPhi / 2) * Math.sin(deltaPhi / 2) + 
+                      Math.cos(phi1) * Math.cos(phi2) * 
+                      Math.sin(deltaLambda / 2) * Math.sin(deltaLambda / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c; // in metres
+        };
+
+        const calculateScore = (deposit, proximity) => {
+            // Implement score calculation logic
+        };
+
+        const renderResultsTable = (data) => {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<table><thead><tr><th>Action</th><th>Data</th></tr></thead><tbody>';
+            data.forEach(item => {
+                resultsDiv.innerHTML += `<tr><td><a href='${item.link}' target='_blank'>Open BLM MLRS</a></td><td>${item.data}</td></tr>`;
+            });
+            resultsDiv.innerHTML += '</tbody></table>';
+        };
+
+        // Initialize the map
+        const map = L.map('map').setView([37.8, -96], 4);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
-            attribution: '© OpenStreetMap'
+            attribution: '© OpenStreetMap contributors'
         }).addTo(map);
-
-        // BLM/MRDS API integration
-        function fetchGeologyData() {
-            $.get('https://api.example.com/geology/data', function(data) {
-                processGeologyData(data);
-            });
-        }
-
-        function processGeologyData(data) {
-            var geologyData = extractMetadata(data);
-            renderTable(geologyData);
-        }
-
-        function extractMetadata(data) {
-            // Simplified metadata extraction logic
-            return data.metadata;
-        }
-
-        function renderTable(geologyData) {
-            var tbody = $('#geology-table tbody');
-            tbody.empty();
-            geologyData.forEach(item => {
-                tbody.append(`<tr><td>${item.attribute}</td><td>${item.value}</td></tr>`);
-            });
-        }
-
-        // Conflict detection logic
-        function detectConflicts(geologyData) {
-            // Implement conflict detection based on geology scoring
-        }
-
-        // Geology scoring function
-        function calculateGeologyScore(geologyData) {
-            // Implement scoring logic based on geological attributes
-        }
-
-        // Initialize application
-        fetchGeologyData();
     </script>
 </body>
 </html>
