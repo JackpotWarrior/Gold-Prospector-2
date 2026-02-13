@@ -3,32 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Prospector 2</title>
+    <title>Gold Prospector</title>
 </head>
 <body>
-    <h1>Welcome to Gold Prospector 2</h1>
+    <h1>Welcome to Gold Prospector</h1>
     <script>
         function buildWhere() {
-            // corrected function without return where;
-            // logic to build where
+            // Removed stray return statement
+            // Other logic for building where clause...
         }
 
-        function loadCounties() {
-            // logic to load counties
-        }
-        // Removed extra closing brace here
-
-        function extractMeta(meta) {
-            const county = meta.county;
-            const closedDate = meta.closedDate;
+        function extractMeta(data) {
+            const county = data.county;
+            const closedDate = data.closedDate;
             return { county, closedDate };
         }
 
-        // Example of claims mapping
-        const claims = [
-            { CSE_NR: '123', ADMIN_STATE: 'NV' },
-            // other claims
-        ];
+        function loadCounties() {
+            // Load counties logic
+            // Removed extra closing brace
+        }
+
+        // API call logic with corrected field names
+        fetch('api_endpoint')
+            .then(response => response.json())
+            .then(data => {
+                const correctedData = {
+                    CSE_NR: data.CSE_NR,
+                    ADMIN_STATE: data.ADMIN_STATE,
+                    ...extractMeta(data.metadata)
+                };
+                // Additional processing...
+            });
     </script>
 </body>
 </html>
